@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urgence Jérusalem - Live</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            text-align: center; margin: 0; display: flex; flex-direction: column; 
+            justify-content: center; height: 100vh; transition: background 0.6s; 
+            background-color: #2ecc71; color: white; overflow: hidden;
+        }
+        .status { font-size: 2.2em; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .timer { font-size: 5em; font-weight: bold; margin: 10px 0; font-variant-numeric: tabular-nums; }
+        .info { font-size: 1.2em; padding: 0 25px; min-height: 4em; line-height: 1.4; }
+        #log { position: absolute; bottom: 50px; width: 100%; font-size: 0.75em; opacity: 0.9; font-weight: bold; }
+        
+        #test-btn { 
+            position: absolute; bottom: 15px; right: 15px; 
+            background: rgba(255,255,255,0.2); border: 1px solid white; 
+            color: white; padding: 8px 12px; cursor: pointer; border-radius: 5px; font-size: 0.7em;
+        }
+
+        /* États Visuels */
+        .danger { background-color: #e74c3c; animation: blink 0.8s infinite; }
+        .waiting { background-color: #f39c12; }
+        .safe { background-color: #2ecc71; }
+
+        @keyframes blink { 
+            0% { background-color: #e74c3c; } 
+            50% { background-color: #c0392b; } 
+            100% { background-color: #e74c3c; } 
+        }
+    </style>
+</head>
+<body id="bg" class="safe">
+
+    <div id="status-text" class="status">CHARGEMENT...</div>
+    <div id="timer-display" class="timer"></div>
+    <div id="instruction" class="info">Connexion sécurisée aux serveurs officiels...</div>
+    
+    <div id="log">Initialisation...</div>
+    <button id="test-btn" onclick="simulateAlert()">TEST VISUEL (30s)</button>
+
+    <script>
+        const CITY = "ירושלים"; 
+        const OREF_URL = "https://www.oref.org.il/WarningMessages/History/AlertsHistory.json";
+        
+        let countdownInterval = null;
+        let isDanger = false;
+
+        async function check() {
+            const log = document.getElementById('log');
+            // Liste de deux proxys pour contourner les blocages CORS
+            const proxies = [
+                "https://corsproxy.io/?",
+                "https://api.allorigins.win/get?url="
+            ];
+            
+            for (let proxy of proxies) {
+                try {
+                    const target = encodeURIComponent(OREF_URL + "?nocache=" + Date.now());
+                    const response = await fetch(proxy + target);
+                    
+                    if (!response.ok) throw new Error("Échec Proxy");
+
+                    const raw = await response.json();
+                    
+                    // Gestion du format de réponse selon le proxy utilisé
+                    let data;
+                    if (raw.contents) {
+                        // Cas AllOrigins (JSON string dans .contents)
+                        data = typeof raw.contents === "string" ? JSON.parse(raw.contents) : raw.contents;
+                    } else {
+                        // Cas CorsProxy.io
+                        data = raw;
+                    }
+
+                    // Vérification de la ville dans les données reçues
+                    const alertFound = Array.isArray(data) && data.some(a => a.data && a.data.includes(CITY));
+
+                    if (alertFound && !isDanger) {
+                        startDanger();
+                    } else if (!alertFound && isDanger) {
+                        startWaiting(600); // 10 minutes de sécurité
+                    }
+
+                    log.innerHTML = "STATUT : CONNECTÉ <br> " + new Date().toLocaleTimeString();
+                    return; // Succès, on sort de la boucle
+                } catch (e) {
+                    console.error("Tentative avec proxy suivant...");
+                }
+            }
+            log.innerHTML = "<span style='color:black'>⚠️ ERREUR DE SYNCHRONISATION</span>";
+        }
+
+        function startDanger() {
+            isDanger = true;
+            if (countdownInterval) clearInterval(countdownInterval);
+            document.getElementById('bg').className = "danger";
+            document.getElementById('status-text').innerText = "⚠️ ALERTE ACTIVE";
+            document.getElementById('timer-display').innerText = "À L'ABRI !";
+            document.getElementById('instruction').innerText = "Danger immédiat à Jérusalem. Rejoignez votre espace protégé maintenant.";
+        }
+
+        function startWaiting(seconds) {
+            isDanger = false;
+            document.getElementById('bg').className = "waiting";
+            document.getElementById('status-text').innerText = "SÉCURITÉ DÉBRIS";
+            document.getElementById('instruction').innerText = "L'alerte est passée. Attendez la fin du décompte pour éviter les chutes de débris.";
+            
+            let timeLeft = seconds;
+            updateTimerDisplay(timeLeft);
+            
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay(timeLeft);
+                if (timeLeft <= 0) stopAll();
+            }, 1000);
+        }
+
+        function updateTimerDisplay(s) {
+            const m = Math.floor(s / 60);
+            const sec = s % 60;
+            document.getElementById('timer-display').innerText = `${m}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        function stopAll() {
+            clearInterval(countdownInterval);
+            document.getElementById('bg').className = "safe";
+            document.getElementById('status-text').innerText = "CIEL DÉGAGÉ";
+            document.getElementById('timer-display').innerText = "";
+            document.getElementById('instruction').innerText = "Aucune alerte en cours à Jérusalem.";
+        }
+
+        function simulateAlert() {
+            startDanger();
+            setTimeout(() => {
+                if (isDanger) startWaiting(30); 
+            }, 5000);
+        }
+
+        // Cycle de vérification
+        stopAll();
+        setInterval(check, 3500); // Équilibre entre réactivité et légèreté
+        check();
+    </script>
+</body>
+</html>
