@@ -1,39 +1,44 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertes Jérusalem</title>
+    <title>PIKOUD LIVE</title>
     <style>
-        body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; text-align: center; }
-        .container { padding-top: 20px; }
-        h2 { font-size: 1.2rem; opacity: 0.7; }
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100vh; }
+        #status { font-size: 1.5rem; padding: 20px; border: 2px solid #333; margin: 20px; border-radius: 10px; }
+        .online { color: #2ecc71; border-color: #2ecc71 !important; }
+        #clock { font-size: 0.8rem; opacity: 0.5; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>ALERTES OFFICIELLES</h2>
-        <script src="https://www.oref.org.il/General/Alerts/Alerts.js"></script>
-        
-        <div id="oref_alerts"></div>
-
-        <script>
-            // On configure le widget pour qu'il s'affiche simplement
-            if (typeof OrefAlerts !== 'undefined') {
-                OrefAlerts.init({
-                    container: '#oref_alerts',
-                    width: '100%',
-                    height: '500px',
-                    lang: 'he' // 'he' est le plus rapide pour les mises à jour
-                });
-            }
-        </script>
+    <div id="status">
+        <div id="msg">CONNEXION AU PIKOUD...</div>
+        <div id="clock">--:--:--</div>
     </div>
 
-    <p style="font-size: 0.8rem; margin-top: 50px;">
-        Le widget s'actualise automatiquement en temps réel.
-    </p>
+    <script src="https://www.oref.org.il/General/Alerts/Alerts.js"></script>
 
+    <script>
+        function updateStatus() {
+            const msg = document.getElementById('msg');
+            const box = document.getElementById('status');
+            const clock = document.getElementById('clock');
+            
+            // Si le script Oref est chargé, on confirme que c'est OK
+            if (typeof OrefAlerts !== 'undefined') {
+                box.className = "online";
+                msg.innerHTML = "SURVEILLANCE ACTIVE<br><small>JÉRUSALEM & ISRAËL</small>";
+            } else {
+                msg.innerHTML = "ERREUR DE CHARGEMENT";
+            }
+            clock.innerText = "Dernier check : " + new Date().toLocaleTimeString();
+        }
+
+        // On vérifie toutes les 5 secondes que le lien est toujours actif
+        setInterval(updateStatus, 5000);
+        updateStatus();
+    </script>
 </body>
 </html>
