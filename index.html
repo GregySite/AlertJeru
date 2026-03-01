@@ -1,44 +1,40 @@
 <!DOCTYPE html>
-<html lang="he">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>JLM DIRECT</title>
+    <title>JLM ALERT</title>
     <style>
         body { margin: 0; font-family: sans-serif; background: #000; color: #fff; height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; transition: 0.3s; }
-        .city { font-size: 1.2rem; opacity: 0.6; }
-        .status { font-size: 2.5rem; font-weight: 900; margin: 10px 0; }
-        .timer { font-size: 5rem; font-weight: bold; font-family: monospace; }
-        #log { position: fixed; bottom: 10px; width: 100%; font-size: 0.7rem; opacity: 0.4; }
-        /* Couleurs */
+        #s { font-size: 2.2rem; font-weight: 900; }
+        #t { font-size: 5rem; font-weight: bold; margin: 15px 0; }
+        #l { position: fixed; bottom: 15px; width: 100%; font-size: 0.7rem; opacity: 0.5; }
         .safe { background: #1b5e20; }
-        .danger { background: #b71c1c; }
+        .danger { background: #b71c1c; animation: b 0.5s infinite; }
         .wait { background: #e65100; }
+        @keyframes b { 0%{opacity:1} 50%{opacity:0.6} 100%{opacity:1} }
     </style>
 </head>
 <body class="safe" id="b">
 
-    <div class="city">ירושלים (Jérusalem)</div>
-    <div id="s" class="status">VÉRIFICATION...</div>
-    <div id="t" class="timer">--:--</div>
-    
-    <div id="log">Connexion directe...</div>
+    <div style="opacity:0.6">JÉRUSALEM</div>
+    <div id="s">VÉRIFICATION...</div>
+    <div id="t">--:--</div>
+    <div id="l">Connexion en cours...</div>
 
     <script>
-        const CITY = "ירושלيم"; 
-        // On utilise un service de rebond spécifique aux alertes en Israël qui autorise le CORS
-        const URL = "https://api.redalert.me/alerts"; 
-
+        const CITY = "ירושלים";
         let isD = false, countdown = null;
 
-        async function update() {
+        async function check() {
+            const log = document.getElementById('l');
             try {
-                const r = await fetch(URL, { mode: 'cors' });
-                const data = await r.json();
-                
-                // On cherche si Jérusalem est dans la liste des alertes actives
-                // Note: Ce flux renvoie souvent les noms de villes en hébreu ou anglais
-                const active = data.some(a => a.cities && (a.cities.includes(CITY) || a.cities.includes("Jerusalem")));
+                // Utilisation d'un pont (Bridge) qui simule exactement ce que fait la bibliothèque d'Elad Nava
+                const r = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://www.oref.org.il/WarningMessages/History/AlertsHistory.json?v=" + Date.now()));
+                const j = await r.json();
+                const data = JSON.parse(j.contents);
+
+                const active = data && data.length > 0 && data[0].data.includes(CITY);
 
                 if (active && !isD) {
                     isD = true; clearInterval(countdown);
@@ -46,31 +42,32 @@
                     document.getElementById('s').innerText = "⚠️ À L'ABRI !";
                     document.getElementById('t').innerText = "VITE";
                 } else if (!active && isD) {
-                    isD = false; startWait();
+                    isD = false; startW();
                 } else if (!active && !isD && !countdown) {
                     document.getElementById('b').className = "safe";
                     document.getElementById('s').innerText = "CIEL DÉGAGÉ";
                     document.getElementById('t').innerText = "OK";
                 }
-                document.getElementById('log').innerText = "Sync: " + new Date().toLocaleTimeString();
+                log.innerText = "Dernière synchro : " + new Date().toLocaleTimeString();
             } catch (e) {
-                document.getElementById('log').innerText = "Erreur de flux - Tentative...";
+                log.innerText = "Tentative de reconnexion...";
             }
         }
 
-        function startWait() {
+        function startW() {
             document.getElementById('b').className = "wait";
-            document.getElementById('s').innerText = "SÉCURITÉ DÉBRIS";
+            document.getElementById('s').innerText = "SÉCURITÉ (DEBRIS)";
             let s = 600;
             countdown = setInterval(() => {
                 s--;
                 document.getElementById('t').innerText = Math.floor(s/60) + ":" + (s%60).toString().padStart(2,'0');
-                if (s <= 0) { clearInterval(countdown); countdown = null; update(); }
+                if (s <= 0) { clearInterval(countdown); countdown = null; check(); }
             }, 1000);
         }
 
-        setInterval(update, 3000);
-        update();
+        // On interroge toutes les 2 secondes (très réactif comme l'API d'Elad Nava)
+        setInterval(check, 2500);
+        check();
     </script>
 </body>
 </html>
