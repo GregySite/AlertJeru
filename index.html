@@ -1,44 +1,105 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIKOUD LIVE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JLM ALERT LIVE</title>
     <style>
-        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100vh; }
-        #status { font-size: 1.5rem; padding: 20px; border: 2px solid #333; margin: 20px; border-radius: 10px; }
-        .online { color: #2ecc71; border-color: #2ecc71 !important; }
-        #clock { font-size: 0.8rem; opacity: 0.5; margin-top: 10px; }
+        body { margin: 0; font-family: sans-serif; background: #121212; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; transition: background 0.5s; }
+        .city { font-size: 1.2rem; opacity: 0.6; text-transform: uppercase; }
+        .status { font-size: 2.5rem; font-weight: 900; margin: 15px 0; }
+        .timer { font-size: 4rem; font-weight: bold; font-family: monospace; }
+        #log { position: fixed; bottom: 15px; width: 100%; font-size: 0.7rem; opacity: 0.5; }
+        
+        /* États de couleur */
+        .safe { background-color: #1b5e20; }
+        .danger { background-color: #b71c1c; animation: pulse 1s infinite; }
+        .wait { background-color: #e65100; }
+
+        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.8;} 100% {opacity: 1;} }
     </style>
 </head>
-<body>
+<body class="safe" id="b">
 
-    <div id="status">
-        <div id="msg">CONNEXION AU PIKOUD...</div>
-        <div id="clock">--:--:--</div>
-    </div>
-
-    <script src="https://www.oref.org.il/General/Alerts/Alerts.js"></script>
+    <div class="city">Jérusalem / ירושלים</div>
+    <div id="s" class="status">SURVEILLANCE...</div>
+    <div id="t" class="timer">OK</div>
+    
+    <div id="log">Connexion au flux RedAlert...</div>
 
     <script>
-        function updateStatus() {
-            const msg = document.getElementById('msg');
-            const box = document.getElementById('status');
-            const clock = document.getElementById('clock');
-            
-            // Si le script Oref est chargé, on confirme que c'est OK
-            if (typeof OrefAlerts !== 'undefined') {
-                box.className = "online";
-                msg.innerHTML = "SURVEILLANCE ACTIVE<br><small>JÉRUSALEM & ISRAËL</small>";
-            } else {
-                msg.innerHTML = "ERREUR DE CHARGEMENT";
+        const CITY_HE = "ירושלים";
+        const CITY_EN = "Jerusalem";
+        // Flux public RedAlert (CORS autorisé)
+        const API_URL = "https://api.redalert.me/alerts";
+
+        let isDanger = false;
+        let countdown = null;
+
+        async function update() {
+            const log = document.getElementById('log');
+            try {
+                // On récupère les alertes en cours
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                // On cherche si Jérusalem est dans la liste
+                const alertActive = data.some(a => 
+                    (a.cities && (a.cities.includes(CITY_HE) || a.cities.includes(CITY_EN)))
+                );
+
+                if (alertActive && !isDanger) {
+                    setDanger();
+                } else if (!alertActive && isDanger) {
+                    startWaiting();
+                } else if (!alertActive && !isDanger && !countdown) {
+                    setSafe();
+                }
+
+                log.innerText = "Dernière synchro : " + new Date().toLocaleTimeString();
+            } catch (e) {
+                log.innerText = "Erreur de flux (Tentative...)";
             }
-            clock.innerText = "Dernier check : " + new Date().toLocaleTimeString();
         }
 
-        // On vérifie toutes les 5 secondes que le lien est toujours actif
-        setInterval(updateStatus, 5000);
-        updateStatus();
+        function setDanger() {
+            isDanger = true;
+            if (countdown) clearInterval(countdown);
+            document.getElementById('b').className = "danger";
+            document.getElementById('s').innerText = "⚠️ À L'ABRI !";
+            document.getElementById('t').innerText = "VITE";
+        }
+
+        function startWaiting() {
+            isDanger = false;
+            document.getElementById('b').className = "wait";
+            document.getElementById('s').innerText = "SÉCURITÉ (10m)";
+            
+            let seconds = 600; 
+            if (countdown) clearInterval(countdown);
+            countdown = setInterval(() => {
+                seconds--;
+                let m = Math.floor(seconds / 60);
+                let s = seconds % 60;
+                document.getElementById('t').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if (seconds <= 0) {
+                    clearInterval(countdown);
+                    countdown = null;
+                    setSafe();
+                }
+            }, 1000);
+        }
+
+        function setSafe() {
+            isDanger = false;
+            document.getElementById('b').className = "safe";
+            document.getElementById('s').innerText = "CIEL DÉGAGÉ";
+            document.getElementById('t').innerText = "RAS";
+        }
+
+        // Vérification toutes les 4 secondes
+        setInterval(update, 4000);
+        update();
     </script>
 </body>
 </html>
