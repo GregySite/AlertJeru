@@ -317,7 +317,7 @@
   #alert-overlay {
     display:none; position:fixed; inset:0; z-index:100;
     background: rgba(180,0,0,0.12);
-    backdrop-filter: blur(2px);
+  
     animation: flash-bg 0.5s ease-in-out infinite alternate;
   }
   #alert-overlay.show { display:block; }
@@ -459,7 +459,15 @@
   </div><!-- settings-card -->
 
   <!-- TEST BUTTONS -->
-  <div class="test-row">
+  <div style="text-align:center; margin-bottom:8px;">
+    <button onclick="toggleTests()" id="toggle-test-btn"
+      style="background:none;border:1px solid var(--border);color:var(--muted);
+      border-radius:999px;padding:5px 14px;font-size:11px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1px;transition:all 0.2s;">
+      🧪 tests
+    </button>
+  </div>
+  <div class="test-row" id="test-row" style="display:none;">
     <button class="test-btn y" onclick="simulatePhase('pre-alert')">⚠️ Pré-alerte</button>
     <button class="test-btn r" onclick="simulatePhase('alert')">🚨 ALERTE</button>
     <button class="test-btn g" onclick="simulatePhase('safe')">✅ Sortie</button>
@@ -801,6 +809,15 @@ function notify(title, body) {
   if ('Notification' in window && Notification.permission === 'granted') {
     new Notification(title, { body, icon: '🛡️', badge: '🛡️', requireInteraction: true });
   }
+}
+
+// ─── TOGGLE TESTS ─────────────────────────────────────────────────────────────
+function toggleTests() {
+  const row = document.getElementById('test-row');
+  const btn = document.getElementById('toggle-test-btn');
+  const visible = row.style.display !== 'none';
+  row.style.display = visible ? 'none' : 'flex';
+  btn.textContent = visible ? '🧪 tests' : '🙈 masquer tests';
 }
 
 // ─── SIMULATE (TESTS) ─────────────────────────────────────────────────────────
