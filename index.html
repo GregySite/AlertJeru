@@ -4,12 +4,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <meta name="theme-color" content="#0a0a0f"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<title>🛡️ MiklatAlert</title>
+<title>AlertMiklat</title>
+<link rel="icon" type="image/svg+xml" id="favicon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><circle cx=%2716%27 cy=%2716%27 r=%2714%27 fill=%27%2322d07a%27/><text x=%2716%27 y=%2722%27 font-size=%2718%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27 font-weight=%27bold%27>✓</text></svg>"/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+
 <style>
   :root {
     --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e;
@@ -696,43 +696,13 @@ function processAlerts(data) {
   else if (!matched && allAlerts.length===0 && state==='pre-alert') setPhase('idle');
 }
 
-// ─── PHASE ────────────────────────────────────────────────────────────────────
-function triggerAlert(zone) {
+
   showLastAlert(zone);
   setPhase('pre-alert');
   setTimeout(() => { if (state==='pre-alert') setPhase('alert'); }, 3000);
 }
 
-function setPhase(phase) {
-  state = phase;
-  const t = T[currentLang];
-  const card = document.getElementById('phase-card');
-  const timerBox = document.getElementById('timer-container');
-  const overlay = document.getElementById('alert-overlay');
-  card.className = 'phase-card';
-  overlay.classList.remove('show');
-  clearInterval(timerInterval);
 
-  applyPhaseText(phase);
-  document.getElementById('phase-icon').textContent = {idle:'🕊️','pre-alert':'⚠️',alert:'🚨',safe:'✅'}[phase];
-
-  if (phase==='idle') {
-    card.classList.add('idle'); timerBox.style.display='none';
-    document.getElementById('status-dot').className='status-dot';
-  } else if (phase==='pre-alert') {
-    card.classList.add('pre-alert'); timerBox.style.display='none';
-    buzz('pre'); notify(...t.notifPre);
-  } else if (phase==='alert') {
-    card.classList.add('alert-active'); timerBox.style.display='flex';
-    overlay.classList.add('show');
-    document.getElementById('status-dot').className='status-dot alert';
-    buzz('alert'); notify(...t.notifAlert); startTimer();
-  } else if (phase==='safe') {
-    card.classList.add('safe'); timerBox.style.display='none';
-    document.getElementById('status-dot').className='status-dot';
-    buzz('safe'); notify(...t.notifSafe);
-  }
-}
 
 function startTimer() {
   timerRemaining = CONFIG.durationSec;
