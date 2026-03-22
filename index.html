@@ -339,6 +339,7 @@ const T = {
 };
 
 const CITIES = [
+  {fr:'⚡ Toutes les villes', he:'⚡ כל הערים', en:'⚡ All cities', keys:'__ALL__'},
   {fr:'Tel Aviv',he:'תל אביב',en:'Tel Aviv',keys:'תל אביב,Tel Aviv'},
   {fr:'Jérusalem',he:'ירושלים',en:'Jerusalem',keys:'ירושלים,Jerusalem'},
   {fr:'Jérusalem Sud',he:'ירושלים דרום',en:'Jerusalem South',keys:'ירושלים דרום,Jerusalem South,גוש עציון'},
@@ -547,7 +548,8 @@ async function fetchAlerts() {
 
 // ─── ALERT PROCESSING ─────────────────────────────────────────────────────────
 function processAlerts(data) {
-  const zones = CONFIG.zones.split(',').map(z => z.trim().toLowerCase());
+  const allCities = CONFIG.zones === '__ALL__';
+  const zones = allCities ? [] : CONFIG.zones.split(',').map(z => z.trim().toLowerCase());
 
   // Vérifie les alertes actives (cat != 13 et != 14)
   let hasActiveAlert = false;
@@ -561,7 +563,7 @@ function processAlerts(data) {
       const cat = g.cat || g.category || 0;
       const alertZones = g.alerts || g.cities || [];
       for (const zone of alertZones) {
-        if (zones.some(z => zone.toLowerCase().includes(z))) {
+        if (allCities || zones.some(z => zone.toLowerCase().includes(z))) {
           if (cat === 14) hasPreAlert = true;
           else if (cat === 13) hasEnd = true;
           else { hasActiveAlert = true; matchedZone = zone; }
@@ -575,7 +577,7 @@ function processAlerts(data) {
     for (const u of data.updates) {
       const cat = u.cat || u.category || 0;
       const uZones = u.alerts || u.cities || u.areas || [];
-      const zoneMatch = uZones.length === 0 || uZones.some(z => zones.some(k => z.toLowerCase().includes(k)));
+      const zoneMatch = allCities || uZones.length === 0 || uZones.some(z => zones.some(k => z.toLowerCase().includes(k)));
       if (zoneMatch) {
         if (cat === 13) hasEnd = true;
         if (cat === 14) hasPreAlert = true;
