@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
@@ -80,9 +80,9 @@
   .history-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
   .history-item:last-child { border-bottom:none; }
   .history-badge { font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; white-space:nowrap; flex-shrink:0; }
-  .history-badge.alert   { background:rgba(247,79,79,0.15); color:var(--red); border:1px solid rgba(247,79,79,0.3); }
-  .history-badge.pre     { background:rgba(247,200,79,0.15); color:var(--yellow); border:1px solid rgba(247,200,79,0.3); }
-  .history-badge.safe    { background:rgba(34,208,122,0.15); color:var(--green); border:1px solid rgba(34,208,122,0.3); }
+  .history-badge.alert { background:rgba(247,79,79,0.15); color:var(--red); border:1px solid rgba(247,79,79,0.3); }
+  .history-badge.pre   { background:rgba(247,200,79,0.15); color:var(--yellow); border:1px solid rgba(247,200,79,0.3); }
+  .history-badge.safe  { background:rgba(34,208,122,0.15); color:var(--green); border:1px solid rgba(34,208,122,0.3); }
   .history-badge.unknown { background:rgba(107,107,138,0.15); color:var(--muted); border:1px solid rgba(107,107,138,0.3); }
   .history-city { font-size:12px; color:var(--muted); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .history-ago  { font-size:11px; color:var(--muted); font-family:var(--mono); white-space:nowrap; flex-shrink:0; }
@@ -131,27 +131,12 @@
   @keyframes flash-bg { from{background:rgba(180,0,0,0.06);} to{background:rgba(180,0,0,0.18);} }
 
   footer { margin-top:24px; text-align:center; font-size:11px; color:var(--muted); font-family:var(--mono); }
-
-  /* ── RTL ─────────────────────────────────────────────────────── */
-  body.rtl { direction:rtl; }
-  body.rtl header { flex-direction:row-reverse; }
   body.rtl .header-right { flex-direction:row-reverse; }
   body.rtl .location-badge { flex-direction:row-reverse; }
-  body.rtl #next-poll-txt { margin-left:0; margin-right:auto; }
-  body.rtl .settings-title { flex-direction:row-reverse; }
-  /* Textes alignés à droite, layout identique au LTR */
-  body.rtl .setting-label { text-align:right; display:block; }
-  body.rtl .setting-desc  { text-align:right; display:block; }
-  body.rtl .setting-row.col { align-items:flex-end; }
-  body.rtl .setting-row.col > div { text-align:right; width:100%; }
-  body.rtl #zone-current-display { text-align:right; width:100%; }
-  body.rtl .history-title { text-align:right; }
+  body.rtl .setting-row { flex-direction:row-reverse; }
+  body.rtl .setting-row.col { flex-direction:column; align-items:flex-start; }
   body.rtl .history-item { flex-direction:row-reverse; }
-  body.rtl .history-city  { text-align:right; }
-  body.rtl .last-alert-title   { text-align:right; }
-  body.rtl .last-alert-content { text-align:right; }
-  body.rtl .last-alert-time    { text-align:right; }
-  body.rtl footer { direction:rtl; }
+  body.rtl .history-city { text-align:left; }
   @media(max-width:380px) { .timer-display{font-size:48px;} .phase-icon{font-size:44px;} }
 </style>
 </head>
@@ -198,6 +183,7 @@
     <button class="reset-btn" id="reset-btn" style="display:none;" onclick="resetToIdle()">↺ Retour au calme</button>
   </div>
 
+  <!-- HISTORIQUE -->
   <div class="history-card" id="history-card" style="display:none;">
     <div class="history-title" id="t-history-title">📋 Historique</div>
     <div id="history-list"></div>
@@ -421,7 +407,7 @@ const CITIES = [
 const CONFIG = {
   zones:           localStorage.getItem('zones')           || 'ירושלים - דרום,גוש עציון',
   durationSec:     parseInt(localStorage.getItem('durationSec')     || '600'),
-  pollIntervalSec: parseInt(localStorage.getItem('pollIntervalSec') || '10'),
+  pollIntervalSec: parseInt(localStorage.getItem('pollIntervalSec') || '15'),
   vibration:       localStorage.getItem('vibration') !== 'false',
   sound:           localStorage.getItem('sound')     !== 'false',
   lang:            localStorage.getItem('lang')            || 'fr',
@@ -742,8 +728,7 @@ function showLastAlert(city, timeSec) {
 // ═══════════════════════════════════════════════════════════════════
 
 function startPolling() {
-  pollCountdown = CONFIG.pollIntervalSec;
-  document.getElementById('next-poll-txt').textContent = '↻ ' + pollCountdown + 's';
+  pollCountdown = 0;
   fetchAndSync();
   pollInterval = setInterval(() => {
     pollCountdown--;
@@ -766,12 +751,9 @@ function setLang(lang) {
   localStorage.setItem('lang', lang);
   const t = T[lang];
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
   document.body.classList.toggle('rtl', lang === 'he');
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.remove('active');
-    if (b.getAttribute('onclick') === "setLang('" + lang + "')") b.classList.add('active');
-  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]').classList.add('active');
 
   const ids = {
     't-notif-msg':t.notifMsg,'t-notif-btn':t.notifBtn,
@@ -789,27 +771,20 @@ function setLang(lang) {
     if (el && val) el.textContent = val;
   }
 
-  // Statut réseau immédiat
-  const dot2 = document.getElementById('status-dot');
-  const txt2 = document.getElementById('header-status-txt');
-  if (txt2) txt2.textContent = dot2.classList.contains('offline') ? t.offline : t.online;
+  const isTestVisible = document.getElementById('test-row').style.display !== 'none';
+  document.getElementById('t-test-btn').textContent = isTestVisible ? t.testHide : t.testBtn;
 
-  // Bouton tests
-  const isTV = document.getElementById('test-row').style.display !== 'none';
-  document.getElementById('t-test-btn').textContent = isTV ? t.testHide : t.testBtn;
+  const cityMatch = CITIES.find(c => c.keys === CONFIG.zones);
+  document.getElementById('t-location').textContent =
+    cityMatch ? (cityMatch[lang] || cityMatch.fr) : t.location;
+  const searchEl = document.getElementById('zone-search');
+  if (searchEl && cityMatch) searchEl.value = cityMatch[lang] || cityMatch.fr;
 
-  // Ville
-  const cM = CITIES.find(c => c.keys === CONFIG.zones);
-  document.getElementById('t-location').textContent = cM ? (cM[lang] || cM.fr) : t.location;
-  const sEl = document.getElementById('zone-search');
-  if (sEl && cM) sEl.value = cM[lang] || cM.fr;
-
-  // Phase texte
-  const pP = T[lang].phases[currentState] || T[lang].phases.idle;
-  document.getElementById('phase-title').textContent = pP.title;
-  document.getElementById('phase-icon').textContent  = pP.icon;
-  const mEl = document.getElementById('phase-msg');
-  if (mEl) { mEl.textContent = pP.msg; mEl.setAttribute('dir', t.dir); }
+  const p = T[lang].phases[currentState] || T[lang].phases.idle;
+  document.getElementById('phase-title').textContent = p.title;
+  document.getElementById('phase-icon').textContent  = p.icon;
+  const msgEl = document.getElementById('phase-msg');
+  if (msgEl) { msgEl.textContent = p.msg; msgEl.setAttribute('dir', t.dir); }
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -991,11 +966,11 @@ function simulatePhase(phase) {
 
 window.addEventListener('load', () => {
   document.getElementById('duration-val').textContent = CONFIG.durationSec / 60;
-  document.getElementById('poll-val').textContent = CONFIG.pollIntervalSec + 's';
+  document.getElementById('poll-val').textContent     = CONFIG.pollIntervalSec + 's';
   document.getElementById('toggle-vibration').classList.toggle('on', CONFIG.vibration);
   document.getElementById('toggle-sound').classList.toggle('on', CONFIG.sound);
 
-
+  const cityMatch = CITIES.find(c => c.keys === CONFIG.zones);
   if (cityMatch) {
     document.getElementById('zone-search').value = cityMatch[currentLang] || cityMatch.fr;
     document.getElementById('zone-current-display').textContent =
