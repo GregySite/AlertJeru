@@ -42,13 +42,12 @@
   .notif-bar.show { display:flex; }
   .notif-bar button { margin-left:auto; background:var(--accent); color:white; border:none; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:600; cursor:pointer; font-family:var(--font); white-space:nowrap; }
 
-  .phase-card { border-radius:var(--radius); padding:28px 24px; margin-bottom:16px; border:1.5px solid var(--border); background:var(--surface); transition:border-color 0.4s, background 0.4s; position:relative; overflow:hidden; }
+  .phase-card { border-radius:var(--radius); padding:28px 24px; margin-bottom:16px; border:1.5px solid var(--border); background:var(--surface); transition:border-color 0.4s,background 0.4s; position:relative; overflow:hidden; }
   .phase-card::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity 0.4s; pointer-events:none; }
   .phase-icon { font-size:56px; text-align:center; margin-bottom:16px; display:block; }
   .phase-title { font-size:26px; font-weight:900; text-align:center; letter-spacing:-0.5px; margin-bottom:8px; }
   .msg-block { text-align:center; margin-top:12px; }
   .msg-main { font-size:17px; font-weight:700; color:var(--text); line-height:1.4; }
-
   .phase-card.idle { border-color:var(--border); }
   .phase-card.pre-alert { border-color:var(--yellow); background:linear-gradient(135deg,#12121a 0%,#1a1700 100%); }
   .phase-card.pre-alert::before { background:radial-gradient(ellipse at center,var(--glow-yellow),transparent 70%); opacity:1; }
@@ -68,14 +67,25 @@
   .timer-display.warning { color:var(--orange); }
   .timer-display.safe-color { color:var(--green); }
   .progress-track { width:100%; height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
-  .progress-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--red),var(--orange)); transition:width 1s linear, background 0.5s; width:0%; }
+  .progress-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--red),var(--orange)); transition:width 1s linear,background 0.5s; width:0%; }
   .progress-fill.done { background:var(--green); }
   .timer-label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; font-family:var(--mono); text-align:center; }
-
   .alert-info { font-size:11px; color:var(--muted); text-align:center; margin-top:4px; font-family:var(--mono); }
 
   .reset-btn { margin-top:16px; background:none; border:1px solid var(--muted); color:var(--muted); border-radius:999px; padding:8px 20px; font-family:var(--font); font-size:13px; cursor:pointer; transition:all 0.2s; display:block; width:100%; }
   .reset-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  .history-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:16px; }
+  .history-title { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-family:var(--mono); }
+  .history-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+  .history-item:last-child { border-bottom:none; }
+  .history-badge { font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; white-space:nowrap; flex-shrink:0; }
+  .history-badge.alert { background:rgba(247,79,79,0.15); color:var(--red); border:1px solid rgba(247,79,79,0.3); }
+  .history-badge.pre   { background:rgba(247,200,79,0.15); color:var(--yellow); border:1px solid rgba(247,200,79,0.3); }
+  .history-badge.safe  { background:rgba(34,208,122,0.15); color:var(--green); border:1px solid rgba(34,208,122,0.3); }
+  .history-badge.unknown { background:rgba(107,107,138,0.15); color:var(--muted); border:1px solid rgba(107,107,138,0.3); }
+  .history-city { font-size:12px; color:var(--muted); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .history-ago  { font-size:11px; color:var(--muted); font-family:var(--mono); white-space:nowrap; flex-shrink:0; }
 
   .last-alert-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:16px; }
   .last-alert-title { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:8px; font-family:var(--mono); }
@@ -92,7 +102,7 @@
   .setting-row:last-child { border-bottom:none; }
   .setting-row.col { flex-direction:column; align-items:flex-start; gap:8px; }
   .setting-label { font-size:13px; font-weight:500; }
-  .setting-desc { font-size:11px; color:var(--muted); margin-top:2px; }
+  .setting-desc  { font-size:11px; color:var(--muted); margin-top:2px; }
   .toggle { width:44px; height:24px; border-radius:12px; background:var(--border); position:relative; cursor:pointer; transition:background 0.3s; flex-shrink:0; border:none; outline:none; }
   .toggle::after { content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:var(--muted); transition:all 0.3s; }
   .toggle.on { background:var(--accent); }
@@ -120,23 +130,13 @@
   #alert-overlay.show { display:block; }
   @keyframes flash-bg { from{background:rgba(180,0,0,0.06);} to{background:rgba(180,0,0,0.18);} }
 
-  .history-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:16px; }
-  .history-title { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-family:var(--mono); }
-  .history-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
-  .history-item:last-child { border-bottom:none; }
-  .history-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-  .history-dot.alert   { background:var(--red); box-shadow:0 0 6px var(--red); }
-  .history-dot.pre     { background:var(--yellow); box-shadow:0 0 6px var(--yellow); }
-  .history-dot.safe    { background:var(--green); box-shadow:0 0 6px var(--green); }
-  .history-dot.unknown { background:var(--muted); }
-  .history-label { font-size:13px; font-weight:600; flex:1; }
-  .history-city  { font-size:11px; color:var(--muted); flex:2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; direction:rtl; text-align:right; }
-  .history-ago   { font-size:11px; color:var(--muted); font-family:var(--mono); white-space:nowrap; flex-shrink:0; }
   footer { margin-top:24px; text-align:center; font-size:11px; color:var(--muted); font-family:var(--mono); }
   body.rtl .header-right { flex-direction:row-reverse; }
   body.rtl .location-badge { flex-direction:row-reverse; }
   body.rtl .setting-row { flex-direction:row-reverse; }
   body.rtl .setting-row.col { flex-direction:column; align-items:flex-start; }
+  body.rtl .history-item { flex-direction:row-reverse; }
+  body.rtl .history-city { text-align:left; }
   @media(max-width:380px) { .timer-display{font-size:48px;} .phase-icon{font-size:44px;} }
 </style>
 </head>
@@ -181,6 +181,12 @@
       <div class="alert-info" id="alert-info"></div>
     </div>
     <button class="reset-btn" id="reset-btn" style="display:none;" onclick="resetToIdle()">↺ Retour au calme</button>
+  </div>
+
+  <!-- HISTORIQUE -->
+  <div class="history-card" id="history-card" style="display:none;">
+    <div class="history-title" id="t-history-title">📋 Historique</div>
+    <div id="history-list"></div>
   </div>
 
   <div class="last-alert-card" id="last-alert-card" style="display:none;">
@@ -252,12 +258,6 @@
     </div>
   </div>
 
-  <!-- HISTORIQUE -->
-  <div class="history-card" id="history-card" style="display:none;">
-    <div class="history-title" id="t-history-title">📋 Historique</div>
-    <div id="history-list"></div>
-  </div>
-
   <button class="toggle-test-btn" onclick="toggleTests()">🧪 <span id="t-test-btn">tests</span></button>
   <div class="test-row" id="test-row" style="display:none;">
     <button class="test-btn y" onclick="simulatePhase('pre-alert')" id="t-btn-pre">⚠️ Pré-alerte</button>
@@ -269,11 +269,18 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════════════════
-// ALERTMIKLAT — Logique principale
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// ALERTMIKLAT v3
+// ═══════════════════════════════════════════════════════════════════
 
-// ─── TRADUCTIONS ──────────────────────────────────────────────────────────────
+const PROXY_URL = 'https://miklat-alert.gregyman.workers.dev/';
+
+// Catégories Pikud HaOref
+const CAT_PRE   = 14;  // הנחיה מקדימה = pré-alerte
+const CAT_END   = 13;  // ניתן לצאת   = sortie
+const CAT_DRILL = [101,102,103,104,107]; // exercices → ignorer
+
+// ─── TRADUCTIONS ──────────────────────────────────────────────────
 const T = {
   fr: {
     location:'Jérusalem Sud',
@@ -286,25 +293,23 @@ const T = {
     testBtn:'tests', testHide:'masquer tests',
     btnPre:'⚠️ Pré-alerte', btnAlert:'🚨 ALERTE', btnSafe:'✅ Sortie',
     lastAlert:'⚡ Dernière alerte',
-    online:'en ligne', offline:'erreur réseau', noProxy:'proxy non configuré',
+    historyTitle:'📋 Historique',
+    catLabel:{ [CAT_PRE]:'Pré-alerte', [CAT_END]:'Sortie', default:'Alerte' },
+    badgeClass:{ [CAT_PRE]:'pre', [CAT_END]:'safe', default:'alert' },
+    agoFn:(m) => m <= 0 ? 'à l\'instant' : 'il y a ' + m + ' min',
+    online:'en ligne', offline:'erreur réseau',
     resetBtn:'↺ Retour au calme',
     phases:{
-      idle:        { title:'Calme',              msg:'Aucune alerte en cours',                     icon:'🕊️' },
+      idle:        { title:'Calme',              msg:'Aucune alerte en cours',                      icon:'🕊️' },
       'pre-alert': { title:'Pré-alerte',         msg:'Préparez-vous — dirigez-vous vers le miklat', icon:'⚠️' },
-      alert:       { title:'🚨 ALERTE 🚨',       msg:'Entrez MAINTENANT dans le miklat !',          icon:'🚨' },
-      safe:        { title:'Vous pouvez sortir', msg:'La menace est passée — sortie autorisée',     icon:'✅' },
-      waiting:     { title:'En attente…',        msg:'Chrono terminé — attendez la confirmation',   icon:'⏳' },
+      alert:       { title:'🚨 ALERTE 🚨',       msg:'Entrez MAINTENANT dans le miklat !',           icon:'🚨' },
+      safe:        { title:'Vous pouvez sortir', msg:'La menace est passée — sortie autorisée',      icon:'✅' },
+      waiting:     { title:'En attente…',        msg:'Chrono terminé — attendez la confirmation',    icon:'⏳' },
     },
     timerLabel:'temps restant au miklat', timerAlmost:'presque fini…',
     notifPre:   ['⚠️ Pré-alerte','Dirigez-vous vers le miklat'],
     notifAlert: ['🚨 ALERTE — Entrez au miklat !','Mettez-vous à l\'abri immédiatement'],
     notifSafe:  ['✅ Sortie autorisée','Vous pouvez quitter le miklat'],
-    historyTitle:'📋 Historique',
-    catLabels:{ 1:'Alerte', 20:'Alerte', 2:'Alerte', 14:'Pré-alerte', 13:'Sortie', default:'Événement' },
-    agoSuffix:'il y a',
-    historyTitle:'📋 History',
-    catLabels:{ 1:'Alert', 20:'Alert', 2:'Alert', 14:'Pre-alert', 13:'All clear', default:'Event' },
-    agoSuffix:'',
     dir:'ltr',
   },
   he: {
@@ -318,22 +323,23 @@ const T = {
     testBtn:'בדיקות', testHide:'הסתר בדיקות',
     btnPre:'⚠️ טרום-אזעקה', btnAlert:'🚨 אזעקה', btnSafe:'✅ יציאה',
     lastAlert:'⚡ אזעקה אחרונה',
-    online:'מחובר', offline:'שגיאת רשת', noProxy:'Proxy לא מוגדר',
+    historyTitle:'📋 היסטוריה',
+    catLabel:{ [CAT_PRE]:'טרום-אזעקה', [CAT_END]:'יציאה', default:'אזעקה' },
+    badgeClass:{ [CAT_PRE]:'pre', [CAT_END]:'safe', default:'alert' },
+    agoFn:(m) => m <= 0 ? 'עכשיו' : 'לפני ' + m + ' דק\'',
+    online:'מחובר', offline:'שגיאת רשת',
     resetBtn:'↺ חזרה לשקט',
     phases:{
-      idle:        { title:'שקט',         msg:'אין התרעות כרגע',                    icon:'🕊️' },
-      'pre-alert': { title:'טרום-אזעקה',  msg:'התכוננו — פנו למקלט',               icon:'⚠️' },
-      alert:       { title:'🚨 אזעקה 🚨', msg:'!היכנסו למקלט עכשיו',              icon:'🚨' },
-      safe:        { title:'ניתן לצאת',   msg:'הסכנה חלפה — ניתן לצאת מהמקלט',   icon:'✅' },
-      waiting:     { title:'ממתין…',      msg:'הטיימר הסתיים — ממתין לאישור',      icon:'⏳' },
+      idle:        { title:'שקט',         msg:'אין התרעות כרגע',                   icon:'🕊️' },
+      'pre-alert': { title:'טרום-אזעקה',  msg:'התכוננו — פנו למקלט',              icon:'⚠️' },
+      alert:       { title:'🚨 אזעקה 🚨', msg:'!היכנסו למקלט עכשיו',             icon:'🚨' },
+      safe:        { title:'ניתן לצאת',   msg:'הסכנה חלפה — ניתן לצאת מהמקלט',  icon:'✅' },
+      waiting:     { title:'ממתין…',      msg:'הטיימר הסתיים — ממתין לאישור',     icon:'⏳' },
     },
     timerLabel:'זמן שנותר במקלט', timerAlmost:'…כמעט גמרנו',
     notifPre:   ['⚠️ טרום-אזעקה','פנו למקלט'],
     notifAlert: ['🚨 אזעקה — היכנסו למקלט !','התמגנו מיד'],
     notifSafe:  ['✅ ניתן לצאת','ניתן לצאת מהמקלט'],
-    historyTitle:'📋 היסטוריה',
-    catLabels:{ 1:'אזעקה', 20:'אזעקה', 2:'אזעקה', 14:'טרום-אזעקה', 13:'יציאה', default:'אירוע' },
-    agoSuffix:'לפני',
     dir:'rtl',
   },
   en: {
@@ -347,14 +353,18 @@ const T = {
     testBtn:'tests', testHide:'hide tests',
     btnPre:'⚠️ Pre-alert', btnAlert:'🚨 ALERT', btnSafe:'✅ All clear',
     lastAlert:'⚡ Last alert',
-    online:'online', offline:'network error', noProxy:'proxy not set',
+    historyTitle:'📋 History',
+    catLabel:{ [CAT_PRE]:'Pre-alert', [CAT_END]:'All clear', default:'Alert' },
+    badgeClass:{ [CAT_PRE]:'pre', [CAT_END]:'safe', default:'alert' },
+    agoFn:(m) => m <= 0 ? 'just now' : m + ' min ago',
+    online:'online', offline:'network error',
     resetBtn:'↺ Reset to calm',
     phases:{
-      idle:        { title:'All clear',     msg:'No active alerts',                         icon:'🕊️' },
-      'pre-alert': { title:'Pre-alert',     msg:'Get ready — head to the shelter',          icon:'⚠️' },
-      alert:       { title:'🚨 ALERT 🚨',  msg:'Enter the shelter NOW!',                   icon:'🚨' },
-      safe:        { title:'You may exit',  msg:'Threat has passed — you may leave',        icon:'✅' },
-      waiting:     { title:'Waiting…',      msg:'Timer ended — waiting for confirmation',   icon:'⏳' },
+      idle:        { title:'All clear',     msg:'No active alerts',                        icon:'🕊️' },
+      'pre-alert': { title:'Pre-alert',     msg:'Get ready — head to the shelter',         icon:'⚠️' },
+      alert:       { title:'🚨 ALERT 🚨',  msg:'Enter the shelter NOW!',                  icon:'🚨' },
+      safe:        { title:'You may exit',  msg:'Threat has passed — you may leave',       icon:'✅' },
+      waiting:     { title:'Waiting…',      msg:'Timer ended — waiting for confirmation',  icon:'⏳' },
     },
     timerLabel:'time remaining in shelter', timerAlmost:'almost done…',
     notifPre:   ['⚠️ Pre-alert','Head to the shelter'],
@@ -364,74 +374,64 @@ const T = {
   }
 };
 
-// ─── VILLES ───────────────────────────────────────────────────────────────────
+// ─── VILLES ───────────────────────────────────────────────────────
 const CITIES = [
-  { fr:'⚡ Toutes les villes', he:'⚡ כל הערים',       en:'⚡ All cities',       keys:'__ALL__' },
-  { fr:'Jérusalem Sud',        he:'ירושלים דרום',      en:'Jerusalem South',     keys:'ירושלים - דרום,גוש עציון' },
-  { fr:'Jérusalem Centre',     he:'ירושלים מרכז',      en:'Jerusalem Center',    keys:'ירושלים - מרכז' },
-  { fr:'Jérusalem Est',        he:'ירושלים מזרח',      en:'Jerusalem East',      keys:'ירושלים - מזרח' },
-  { fr:'Jérusalem Ouest',      he:'ירושלים מערב',      en:'Jerusalem West',      keys:'ירושלים - מערב' },
-  { fr:'Jérusalem Nord',       he:'ירושלים צפון',      en:'Jerusalem North',     keys:'ירושלים - צפון' },
-  { fr:'Jérusalem (toute)',    he:'ירושלים כולה',      en:'Jerusalem (all)',     keys:'ירושלים - דרום,ירושלים - מזרח,ירושלים - מערב,ירושלים - מרכז,ירושלים - צפון' },
-  { fr:'Tel Aviv',             he:'תל אביב',           en:'Tel Aviv',            keys:'תל אביב' },
-  { fr:'Haïfa',                he:'חיפה',              en:'Haifa',               keys:'חיפה' },
-  { fr:'Beer Sheva',           he:'באר שבע',           en:'Beer Sheva',          keys:'באר שבע' },
-  { fr:'Ashdod',               he:'אשדוד',             en:'Ashdod',              keys:'אשדוד' },
-  { fr:'Ashkelon',             he:'אשקלון',            en:'Ashkelon',            keys:'אשקלון' },
-  { fr:'Netanya',              he:'נתניה',             en:'Netanya',             keys:'נתניה' },
-  { fr:'Rishon LeZion',        he:'ראשון לציון',       en:'Rishon LeZion',       keys:'ראשון לציון' },
-  { fr:'Petah Tikva',          he:'פתח תקווה',         en:'Petah Tikva',         keys:'פתח תקווה' },
-  { fr:'Modiin',               he:'מודיעין',           en:'Modiin',              keys:'מודיעין' },
-  { fr:'Herzliya',             he:'הרצליה',            en:'Herzliya',            keys:'הרצליה' },
-  { fr:'Raanana',              he:'רעננה',             en:"Ra'anana",            keys:'רעננה' },
-  { fr:'Rehovot',              he:'רחובות',            en:'Rehovot',             keys:'רחובות' },
-  { fr:'Eilat',                he:'אילת',              en:'Eilat',               keys:'אילת' },
-  { fr:'Tibériade',            he:'טבריה',             en:'Tiberias',            keys:'טבריה' },
-  { fr:'Kiryat Shmona',        he:'קריית שמונה',       en:'Kiryat Shmona',       keys:'קריית שמונה' },
-  { fr:'Nahariya',             he:'נהריה',             en:'Nahariya',            keys:'נהריה' },
-  { fr:'Sdérot',               he:'שדרות',             en:'Sderot',              keys:'שדרות' },
-  { fr:'Gush Etzion',          he:'גוש עציון',         en:'Gush Etzion',         keys:'גוש עציון' },
-  { fr:'Gaza (env.)',          he:'עוטף עזה',          en:'Gaza Envelope',       keys:'עוטף עזה' },
-  { fr:'Nord (général)',       he:'הצפון',             en:'The North',           keys:'מטולה,קריית שמונה,נהריה' },
+  { fr:'⚡ Toutes les villes', he:'⚡ כל הערים',    en:'⚡ All cities',      keys:'__ALL__' },
+  { fr:'Jérusalem Sud',        he:'ירושלים דרום',   en:'Jerusalem South',    keys:'ירושלים - דרום,גוש עציון' },
+  { fr:'Jérusalem Centre',     he:'ירושלים מרכז',   en:'Jerusalem Center',   keys:'ירושלים - מרכז' },
+  { fr:'Jérusalem Est',        he:'ירושלים מזרח',   en:'Jerusalem East',     keys:'ירושלים - מזרח' },
+  { fr:'Jérusalem Ouest',      he:'ירושלים מערב',   en:'Jerusalem West',     keys:'ירושלים - מערב' },
+  { fr:'Jérusalem Nord',       he:'ירושלים צפון',   en:'Jerusalem North',    keys:'ירושלים - צפון' },
+  { fr:'Jérusalem (toute)',    he:'ירושלים כולה',   en:'Jerusalem (all)',    keys:'ירושלים - דרום,ירושלים - מזרח,ירושלים - מערב,ירושלים - מרכז,ירושלים - צפון' },
+  { fr:'Tel Aviv',             he:'תל אביב',         en:'Tel Aviv',           keys:'תל אביב' },
+  { fr:'Haïfa',                he:'חיפה',            en:'Haifa',              keys:'חיפה' },
+  { fr:'Beer Sheva',           he:'באר שבע',         en:'Beer Sheva',         keys:'באר שבע' },
+  { fr:'Ashdod',               he:'אשדוד',           en:'Ashdod',             keys:'אשדוד' },
+  { fr:'Ashkelon',             he:'אשקלון',          en:'Ashkelon',           keys:'אשקלון' },
+  { fr:'Netanya',              he:'נתניה',           en:'Netanya',            keys:'נתניה' },
+  { fr:'Rishon LeZion',        he:'ראשון לציון',     en:'Rishon LeZion',      keys:'ראשון לציון' },
+  { fr:'Petah Tikva',          he:'פתח תקווה',       en:'Petah Tikva',        keys:'פתח תקווה' },
+  { fr:'Modiin',               he:'מודיעין',         en:'Modiin',             keys:'מודיעין' },
+  { fr:'Herzliya',             he:'הרצליה',          en:'Herzliya',           keys:'הרצליה' },
+  { fr:'Eilat',                he:'אילת',            en:'Eilat',              keys:'אילת' },
+  { fr:'Kiryat Shmona',        he:'קריית שמונה',     en:'Kiryat Shmona',      keys:'קריית שמונה' },
+  { fr:'Nahariya',             he:'נהריה',           en:'Nahariya',           keys:'נהריה' },
+  { fr:'Sdérot',               he:'שדרות',           en:'Sderot',             keys:'שדרות' },
+  { fr:'Gush Etzion',          he:'גוש עציון',       en:'Gush Etzion',        keys:'גוש עציון' },
+  { fr:'Gaza (env.)',          he:'עוטף עזה',        en:'Gaza Envelope',      keys:'עוטף עזה' },
+  { fr:'Metulla',              he:'מטולה',           en:'Metulla',            keys:'מטולה' },
+  { fr:'Nord (général)',       he:'הצפון',           en:'The North',          keys:'מטולה,קריית שמונה,נהריה' },
 ];
 
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
-const PROXY_URL = 'https://miklat-alert.gregyman.workers.dev/';
-
+// ─── CONFIG ───────────────────────────────────────────────────────
 const CONFIG = {
-  zones:          localStorage.getItem('zones')          || 'ירושלים - דרום,גוש עציון',
-  durationSec:    parseInt(localStorage.getItem('durationSec')    || '600'),
-  pollIntervalSec:parseInt(localStorage.getItem('pollIntervalSec')|| '15'),
-  vibration:      localStorage.getItem('vibration') !== 'false',
-  sound:          localStorage.getItem('sound')     !== 'false',
-  lang:           localStorage.getItem('lang')           || 'fr',
+  zones:           localStorage.getItem('zones')           || 'ירושלים - דרום,גוש עציון',
+  durationSec:     parseInt(localStorage.getItem('durationSec')     || '600'),
+  pollIntervalSec: parseInt(localStorage.getItem('pollIntervalSec') || '15'),
+  vibration:       localStorage.getItem('vibration') !== 'false',
+  sound:           localStorage.getItem('sound')     !== 'false',
+  lang:            localStorage.getItem('lang')            || 'fr',
 };
 
-// ─── ÉTAT ─────────────────────────────────────────────────────────────────────
-// États possibles: 'idle' | 'pre-alert' | 'alert' | 'safe' | 'waiting'
+// ─── ÉTAT GLOBAL ──────────────────────────────────────────────────
 let currentState    = 'idle';
 let currentLang     = CONFIG.lang;
 let timerInterval   = null;
+let timerRemaining  = 0;
 let pollInterval    = null;
 let pollCountdown   = 0;
 let audioCtx        = null;
 let faviconFlash    = null;
-let isTestMode      = false;  // true quand les tests sont ouverts et actifs
+let isTestMode      = false;
 
-// ─── PRIORITÉ DES ÉTATS ───────────────────────────────────────────────────────
-// Ordre croissant de priorité — on ne peut que monter, sauf via 'safe' ou reset
-const STATE_PRIORITY = { idle:0, 'pre-alert':1, alert:2, waiting:2, safe:3 };
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// LOGIQUE PRINCIPALE : lecture API et reconstruction de l'état
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// FETCH & LOGIQUE PRINCIPALE
+// ═══════════════════════════════════════════════════════════════════
 
 async function fetchAndSync() {
   if (isTestMode) return;
-
   const dot = document.getElementById('status-dot');
   const txt = document.getElementById('header-status-txt');
-
   try {
     const res = await fetch(PROXY_URL, { cache:'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -442,132 +442,99 @@ async function fetchAndSync() {
   } catch(e) {
     dot.className = 'status-dot offline';
     txt.textContent = T[currentLang].offline;
-    console.warn('[AlertMiklat] Fetch error:', e);
+    console.warn('[AlertMiklat] fetch error:', e);
   }
 }
 
-// ─── Catégories Oref ──────────────────────────────────────────────────────────
-// 13 = SORTIE (ניתן לצאת מהמרחב המוגן)
-// 14 = PRÉ-ALERTE (הנחיה מקדימה)
-// tout le reste = ALERTE active (roquette, drone, avion...)
-const CAT_END       = 13;
-const CAT_PRE_ALERT = 14;
-const CAT_DRILL     = [101, 102, 103, 104, 107]; // exercices — à ignorer
-
 function computeState(data) {
-  // Nouveau format: { active, history, ts }
-  // active  = alerte en cours RIGHT NOW (oref ou tzevaadom live)
-  // history = alertes des 90 dernières secondes (oref history + tzevaadom)
-
+  // Format: { active:{cat,cities,time}|null, history:[{cat,cities,time,source}], ts }
   const nowSec  = Math.floor((data.ts || Date.now()) / 1000);
   const zones   = parseZones();
   const active  = data.active  || null;
   const history = data.history || [];
 
-  // ── 1. Vérifier l'alerte active (temps réel) ─────────────────────────────
-  if (active && zoneMatches(active.cities, zones)) {
+  // Mettre à jour l'historique affiché (toujours, même si pas de match)
+  renderHistory(history, zones, nowSec);
+
+  // ── 1. Alerte active RIGHT NOW ──────────────────────────────────
+  if (active && !CAT_DRILL.includes(active.cat) && zoneMatches(active.cities, zones)) {
     const cat = active.cat || 1;
-
-    // Ignorer les exercices
-    if (CAT_DRILL.includes(cat)) return;
-
     if (cat === CAT_END) {
-      // Sortie officielle
-      if (currentState === 'alert' || currentState === 'waiting' || currentState === 'pre-alert') {
+      if (['alert','waiting','pre-alert'].includes(currentState))
         applyState('safe', null, nowSec);
-      }
       return;
     }
-
-    if (cat === CAT_PRE_ALERT) {
-      // Pré-alerte
-      if (currentState === 'idle') {
-        applyState('pre-alert', null, nowSec);
-      }
+    if (cat === CAT_PRE) {
+      if (currentState === 'idle') applyState('pre-alert', null, nowSec);
       return;
     }
-
-    // Alerte active (roquette, drone, etc.)
-    const matchedCity = getMatchedCity(active.cities, zones);
+    // Alerte active (roquette, drone…)
+    const city = getMatchedCity(active.cities, zones);
     if (currentState !== 'alert') {
-      showLastAlert(matchedCity, active.time || nowSec);
+      showLastAlert(city, active.time || nowSec);
       buzz('alert');
       notify(...T[currentLang].notifAlert);
     }
-    applyState('alert', { remaining: CONFIG.durationSec, matchedCity, alertTimeSec: active.time || nowSec }, nowSec);
+    applyState('alert', { remaining:CONFIG.durationSec, city, alertTime:active.time||nowSec }, nowSec);
     return;
   }
 
-  // Mettre à jour le panneau historique
-  updateHistory(history, zones, nowSec);
-
-  // ── 2. Pas d'alerte active — reconstruire depuis l'historique ────────────
-  // Trouver l'événement le plus récent pour notre zone dans l'historique
+  // ── 2. Reconstruction depuis l'historique ───────────────────────
   const relevant = history
     .filter(h => !CAT_DRILL.includes(h.cat) && zoneMatches(h.cities, zones))
     .sort((a,b) => b.time - a.time);
 
   if (relevant.length === 0) {
-    // Rien dans l'historique → calme (seulement si on n'est pas en alert/waiting)
-    if (currentState === 'idle' || currentState === 'pre-alert') {
+    if (currentState === 'idle' || currentState === 'pre-alert')
       applyState('idle', null, nowSec);
-    }
     return;
   }
 
-  const latest    = relevant[0];
-  const latestCat = latest.cat || 1;
+  const latest     = relevant[0];
+  const cat        = latest.cat || 1;
   const ageSeconds = nowSec - latest.time;
 
-  // Sortie dans l'historique
-  if (latestCat === CAT_END) {
-    if (currentState === 'alert' || currentState === 'waiting' || currentState === 'pre-alert') {
+  if (cat === CAT_END) {
+    if (['alert','waiting','pre-alert'].includes(currentState))
       applyState('safe', null, nowSec);
-    }
+    return;
+  }
+  if (cat === CAT_PRE) {
+    if (currentState === 'idle') applyState('pre-alert', null, nowSec);
     return;
   }
 
-  // Pré-alerte dans l'historique
-  if (latestCat === CAT_PRE_ALERT) {
-    if (currentState === 'idle') {
-      applyState('pre-alert', null, nowSec);
-    }
-    return;
-  }
-
-  // Alerte dans l'historique — calculer le temps restant
-  const matchedCity = getMatchedCity(latest.cities, zones);
-  const remaining   = CONFIG.durationSec - ageSeconds;
+  // Alerte dans l'historique — chrono ajusté
+  const remaining = CONFIG.durationSec - ageSeconds;
+  const city      = getMatchedCity(latest.cities, zones);
 
   if (remaining > 0) {
-    // Alerte encore dans la fenêtre de temps
     if (currentState !== 'alert') {
-      showLastAlert(matchedCity, latest.time);
-      if (currentState === 'idle' || currentState === 'pre-alert') {
+      showLastAlert(city, latest.time);
+      if (['idle','pre-alert'].includes(currentState)) {
         buzz('alert');
         notify(...T[currentLang].notifAlert);
       }
     }
-    applyState('alert', { remaining, matchedCity, alertTimeSec: latest.time }, nowSec);
+    applyState('alert', { remaining, city, alertTime:latest.time }, nowSec);
   } else {
-    // Alerte expirée → waiting
-    if (currentState === 'alert' || currentState === 'pre-alert') {
+    if (['alert','pre-alert'].includes(currentState))
       applyState('waiting', null, nowSec);
-    }
   }
 }
 
-// ─── HISTORIQUE ───────────────────────────────────────────────────────────────
-function updateHistory(history, zones, nowSec) {
+// ─── HISTORIQUE ───────────────────────────────────────────────────
+function renderHistory(history, zones, nowSec) {
   const card = document.getElementById('history-card');
   const list = document.getElementById('history-list');
   const t    = T[currentLang];
 
-  // Filtrer par zone et trier par temps décroissant
   const relevant = history
-    .filter(h => zoneMatches(h.cities, zones))
+    .filter(h => !CAT_DRILL.includes(h.cat) && zoneMatches(h.cities, zones))
     .sort((a,b) => b.time - a.time)
-    .slice(0, 3); // 3 derniers
+    .slice(0, 3);
+
+  document.getElementById('t-history-title').textContent = t.historyTitle;
 
   if (relevant.length === 0) {
     card.style.display = 'none';
@@ -575,25 +542,31 @@ function updateHistory(history, zones, nowSec) {
   }
 
   card.style.display = 'block';
-  document.getElementById('t-history-title').textContent = t.historyTitle;
-
   list.innerHTML = relevant.map(item => {
-    const cat   = item.cat || 1;
-    const label = t.catLabels[cat] || t.catLabels.default;
-    const dotClass = cat === 14 ? 'pre' : cat === 13 ? 'safe' : 'alert';
-    const city  = getMatchedCity(item.cities, zones);
-    const ago   = Math.round((nowSec - item.time) / 60);
-    const agoTxt = ago <= 0 ? '< 1 min'
-                 : ago === 1 ? '1 min'
-                 : ago + ' min';
-    const agoLabel = t.agoSuffix ? t.agoSuffix + ' ' + agoTxt : agoTxt + ' ago';
-    return \`<div class="history-item">
-      <div class="history-dot \${dotClass}"></div>
-      <div class="history-label">\${label}</div>
-      <div class="history-city">\${city}</div>
-      <div class="history-ago">\${agoLabel}</div>
-    </div>\`;
+    const cat        = item.cat || 1;
+    const label      = t.catLabel[cat]    || t.catLabel.default;
+    const badgeCls   = t.badgeClass[cat]  || t.badgeClass.default;
+    const city       = getMatchedCity(item.cities, zones);
+    const minAgo     = Math.round((nowSec - item.time) / 60);
+    const agoTxt     = t.agoFn(minAgo);
+    return '<div class="history-item">'
+      + '<span class="history-badge ' + badgeCls + '">' + label + '</span>'
+      + '<span class="history-city">' + city + '</span>'
+      + '<span class="history-ago">' + agoTxt + '</span>'
+      + '</div>';
   }).join('');
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────
+function parseZones() {
+  if (CONFIG.zones === '__ALL__') return '__ALL__';
+  return CONFIG.zones.split(',').map(z => z.trim()).filter(Boolean);
+}
+
+function zoneMatches(cities, zones) {
+  if (!cities || cities.length === 0) return false;
+  if (zones === '__ALL__') return true;
+  return cities.some(c => zones.some(z => c.includes(z)));
 }
 
 function getMatchedCity(cities, zones) {
@@ -602,37 +575,33 @@ function getMatchedCity(cities, zones) {
   return cities.find(c => zones.some(z => c.includes(z))) || cities[0];
 }
 
-function parseZones() {
-  if (CONFIG.zones === '__ALL__') return '__ALL__';
-  return CONFIG.zones.split(',').map(z => z.trim()).filter(Boolean);
-}
+// ═══════════════════════════════════════════════════════════════════
+// APPLICATION D'UN ÉTAT
+// ═══════════════════════════════════════════════════════════════════
 
-function zoneMatches(cities, zones) {
-  if (zones === '__ALL__') return cities && cities.length > 0;
-  return cities && cities.some(c => zones.some(z => c.includes(z)));
-}
-
-// ─── APPLICATION D'UN ÉTAT ────────────────────────────────────────────────────
 function applyState(newState, params, nowSec) {
-  // Ne pas rétrograder un état plus grave (sauf vers 'idle' ou 'safe')
-  const currentPrio = STATE_PRIORITY[currentState] || 0;
-  const newPrio     = STATE_PRIORITY[newState]     || 0;
+  // Priorité : ne pas rétrograder sauf vers idle/safe
+  const pri = { idle:0, 'pre-alert':1, alert:2, waiting:2, safe:3 };
+  if (newState !== 'idle' && newState !== 'safe'
+      && (pri[newState]||0) < (pri[currentState]||0)) return;
 
-  if (newState !== 'idle' && newState !== 'safe' && newPrio < currentPrio) return;
-
-  // Pas de changement → juste mettre à jour le chrono si alert
-  if (newState === currentState && newState === 'alert' && params) {
+  // Si déjà en alert → juste resync le chrono
+  if (newState === 'alert' && currentState === 'alert' && params) {
     updateTimer(params.remaining);
+    document.getElementById('alert-info').textContent =
+      params.alertTime && nowSec && (nowSec - params.alertTime) > 5
+        ? '⏱ ' + T[currentLang].agoFn ? '' : ''
+        : '';
     return;
   }
 
   currentState = newState;
   clearInterval(timerInterval);
 
-  const card      = document.getElementById('phase-card');
-  const timerBox  = document.getElementById('timer-container');
-  const overlay   = document.getElementById('alert-overlay');
-  const resetBtn  = document.getElementById('reset-btn');
+  const card     = document.getElementById('phase-card');
+  const timerBox = document.getElementById('timer-container');
+  const overlay  = document.getElementById('alert-overlay');
+  const resetBtn = document.getElementById('reset-btn');
 
   card.className = 'phase-card';
   overlay.classList.remove('show');
@@ -666,13 +635,10 @@ function applyState(newState, params, nowSec) {
       timerBox.style.display = 'flex';
       overlay.classList.add('show');
       document.getElementById('status-dot').className = 'status-dot alerting';
-      // Affiche depuis combien de temps l'alerte a été émise
-      if (params && params.alertTimeSec && nowSec) {
-        const ago = Math.round(nowSec - params.alertTimeSec);
-        if (ago > 5) {
-          document.getElementById('alert-info').textContent =
-            `⏱ alerte émise il y a ${ago}s`;
-        }
+      if (params && params.alertTime && nowSec && (nowSec - params.alertTime) > 5) {
+        const minAgo = Math.round((nowSec - params.alertTime) / 60);
+        document.getElementById('alert-info').textContent =
+          '⏱ ' + T[currentLang].agoFn(minAgo);
       }
       startTimer(params ? params.remaining : CONFIG.durationSec);
       break;
@@ -682,7 +648,6 @@ function applyState(newState, params, nowSec) {
       document.getElementById('status-dot').className = 'status-dot';
       buzz('safe');
       notify(...T[currentLang].notifSafe);
-      // Retour auto au calme après 30s
       setTimeout(() => {
         if (currentState === 'safe' && !isTestMode) applyState('idle', null, null);
       }, 30000);
@@ -697,8 +662,14 @@ function applyState(newState, params, nowSec) {
   }
 }
 
-// ─── CHRONO ───────────────────────────────────────────────────────────────────
-let timerRemaining = 0;
+function resetToIdle() {
+  isTestMode = false;
+  applyState('idle', null, null);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CHRONO
+// ═══════════════════════════════════════════════════════════════════
 
 function startTimer(remainingSec) {
   timerRemaining = Math.max(0, Math.round(remainingSec));
@@ -707,11 +678,8 @@ function startTimer(remainingSec) {
     if (timerRemaining <= 0) {
       clearInterval(timerInterval);
       renderTimerDone();
-      if (!isTestMode) {
-        setTimeout(() => {
-          if (currentState === 'alert') applyState('waiting', null, null);
-        }, 800);
-      }
+      if (!isTestMode)
+        setTimeout(() => { if (currentState === 'alert') applyState('waiting', null, null); }, 800);
       return;
     }
     timerRemaining--;
@@ -720,56 +688,45 @@ function startTimer(remainingSec) {
 }
 
 function updateTimer(remainingSec) {
-  // Resync le chrono si l'API donne un temps différent de > 5s
-  const newRemaining = Math.max(0, Math.round(remainingSec));
-  if (Math.abs(newRemaining - timerRemaining) > 5) {
-    timerRemaining = newRemaining;
-    renderTimer();
-  }
+  const r = Math.max(0, Math.round(remainingSec));
+  if (Math.abs(r - timerRemaining) > 5) { timerRemaining = r; renderTimer(); }
 }
 
 function renderTimer() {
-  const m = Math.floor(timerRemaining / 60);
-  const s = timerRemaining % 60;
-  const display = document.getElementById('timer-display');
-  const fill    = document.getElementById('progress-fill');
-  const label   = document.getElementById('timer-label');
-  display.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-  const pct = ((CONFIG.durationSec - timerRemaining) / CONFIG.durationSec * 100);
+  const m = Math.floor(timerRemaining / 60), s = timerRemaining % 60;
+  document.getElementById('timer-display').textContent =
+    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  const pct = (CONFIG.durationSec - timerRemaining) / CONFIG.durationSec * 100;
+  const fill = document.getElementById('progress-fill');
   fill.style.width = Math.min(100, pct) + '%';
   fill.style.background = 'linear-gradient(90deg,var(--red),var(--orange))';
-  display.className = timerRemaining <= 60 ? 'timer-display warning' : 'timer-display';
-  label.textContent = timerRemaining <= 60 ? T[currentLang].timerAlmost : T[currentLang].timerLabel;
+  fill.className = 'progress-fill';
+  document.getElementById('timer-display').className =
+    timerRemaining <= 60 ? 'timer-display warning' : 'timer-display';
+  document.getElementById('timer-label').textContent =
+    timerRemaining <= 60 ? T[currentLang].timerAlmost : T[currentLang].timerLabel;
 }
 
 function renderTimerDone() {
-  const display = document.getElementById('timer-display');
-  const fill    = document.getElementById('progress-fill');
-  display.textContent = '00:00';
-  display.className   = 'timer-display safe-color';
-  fill.style.width    = '100%';
-  fill.style.background = 'var(--green)';
+  document.getElementById('timer-display').textContent = '00:00';
+  document.getElementById('timer-display').className   = 'timer-display safe-color';
+  const fill = document.getElementById('progress-fill');
+  fill.style.width = '100%'; fill.style.background = 'var(--green)';
   fill.className = 'progress-fill done';
 }
 
-// ─── LAST ALERT ───────────────────────────────────────────────────────────────
+// ─── LAST ALERT ───────────────────────────────────────────────────
 function showLastAlert(city, timeSec) {
-  const card = document.getElementById('last-alert-card');
-  card.style.display = 'block';
+  document.getElementById('last-alert-card').style.display = 'block';
   document.getElementById('last-alert-content').textContent = '📍 ' + city;
   const d = timeSec ? new Date(timeSec * 1000) : new Date();
   document.getElementById('last-alert-time').textContent = d.toLocaleTimeString();
 }
 
-// ─── RESET ────────────────────────────────────────────────────────────────────
-function resetToIdle() {
-  isTestMode = false;
-  applyState('idle', null, null);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // POLLING
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+
 function startPolling() {
   pollCountdown = 0;
   fetchAndSync();
@@ -779,18 +736,16 @@ function startPolling() {
       pollCountdown = CONFIG.pollIntervalSec;
       fetchAndSync();
     }
-    document.getElementById('next-poll-txt').textContent = '↻ ' + Math.max(0, pollCountdown) + 's';
+    document.getElementById('next-poll-txt').textContent = '↻ ' + Math.max(0,pollCountdown) + 's';
   }, 1000);
 }
 
-function restartPolling() {
-  clearInterval(pollInterval);
-  startPolling();
-}
+function restartPolling() { clearInterval(pollInterval); startPolling(); }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // LANGUE
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem('lang', lang);
@@ -798,34 +753,33 @@ function setLang(lang) {
   document.documentElement.lang = lang;
   document.body.classList.toggle('rtl', lang === 'he');
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]').classList.add('active');
 
   const ids = {
-    't-notif-msg':t.notifMsg, 't-notif-btn':t.notifBtn,
-    't-settings':t.settings, 't-zone-label':t.zoneLabel, 't-zone-desc':t.zoneDesc,
-    't-dur-label':t.durLabel, 't-dur-desc':t.durDesc,
-    't-poll-label':t.pollLabel, 't-poll-desc':t.pollDesc,
-    't-vib-label':t.vibLabel, 't-vib-desc':t.vibDesc,
-    't-snd-label':t.sndLabel, 't-snd-desc':t.sndDesc,
-    't-last-alert-title':t.lastAlert,
-    't-btn-pre':t.btnPre, 't-btn-alert':t.btnAlert, 't-btn-safe':t.btnSafe,
-    'timer-label':t.timerLabel, 'reset-btn':t.resetBtn,
+    't-notif-msg':t.notifMsg,'t-notif-btn':t.notifBtn,
+    't-settings':t.settings,'t-zone-label':t.zoneLabel,'t-zone-desc':t.zoneDesc,
+    't-dur-label':t.durLabel,'t-dur-desc':t.durDesc,
+    't-poll-label':t.pollLabel,'t-poll-desc':t.pollDesc,
+    't-vib-label':t.vibLabel,'t-vib-desc':t.vibDesc,
+    't-snd-label':t.sndLabel,'t-snd-desc':t.sndDesc,
+    't-last-alert-title':t.lastAlert,'t-history-title':t.historyTitle,
+    't-btn-pre':t.btnPre,'t-btn-alert':t.btnAlert,'t-btn-safe':t.btnSafe,
+    'timer-label':t.timerLabel,'reset-btn':t.resetBtn,
   };
-  for (const [id, val] of Object.entries(ids)) {
+  for (const [id,val] of Object.entries(ids)) {
     const el = document.getElementById(id);
-    if (el) el.textContent = val;
+    if (el && val) el.textContent = val;
   }
 
   const isTestVisible = document.getElementById('test-row').style.display !== 'none';
   document.getElementById('t-test-btn').textContent = isTestVisible ? t.testHide : t.testBtn;
 
   const cityMatch = CITIES.find(c => c.keys === CONFIG.zones);
-  const locLabel  = cityMatch ? (cityMatch[lang] || cityMatch.fr) : t.location;
-  document.getElementById('t-location').textContent = locLabel;
+  document.getElementById('t-location').textContent =
+    cityMatch ? (cityMatch[lang] || cityMatch.fr) : t.location;
   const searchEl = document.getElementById('zone-search');
   if (searchEl && cityMatch) searchEl.value = cityMatch[lang] || cityMatch.fr;
 
-  // Re-render phase text dans la nouvelle langue
   const p = T[lang].phases[currentState] || T[lang].phases.idle;
   document.getElementById('phase-title').textContent = p.title;
   document.getElementById('phase-icon').textContent  = p.icon;
@@ -833,40 +787,36 @@ function setLang(lang) {
   if (msgEl) { msgEl.textContent = p.msg; msgEl.setAttribute('dir', t.dir); }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// FAVICON DYNAMIQUE
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// FAVICON
+// ═══════════════════════════════════════════════════════════════════
+
 function setFavicon(state) {
   clearInterval(faviconFlash);
   const link = document.getElementById('favicon-link');
-  const map  = {
-    idle:       ['#22d07a','✓'],
-    'pre-alert':['#f7c84f','!'],
-    safe:       ['#22d07a','✓'],
-    waiting:    ['#6b6b8a','?'],
-  };
+  const map  = { idle:['#22d07a','✓'], 'pre-alert':['#f7c84f','!'], safe:['#22d07a','✓'], waiting:['#6b6b8a','?'] };
   if (state === 'alert') {
     let tog = true;
     faviconFlash = setInterval(() => {
-      link.href = makeFavicon(tog ? '#f74f4f' : '#1a0000', '!');
-      tog = !tog;
+      link.href = makeFavicon(tog ? '#f74f4f' : '#1a0000', '!'); tog = !tog;
     }, 600);
   } else {
-    const [bg, sym] = map[state] || map.idle;
+    const [bg,sym] = map[state] || map.idle;
     link.href = makeFavicon(bg, sym);
   }
 }
 function makeFavicon(bg, sym) {
   return 'data:image/svg+xml,' + encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='${bg}'/><text x='16' y='22' font-size='18' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>${sym}</text></svg>`
+    '<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\'><circle cx=\'16\' cy=\'16\' r=\'15\' fill=\'' + bg + '\'/><text x=\'16\' y=\'22\' font-size=\'18\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>' + sym + '</text></svg>'
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // AUDIO / VIBRATION
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+
 function getAudioCtx() {
-  if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) audioCtx = new(window.AudioContext||window.webkitAudioContext)();
   return audioCtx;
 }
 function buzz(type) {
@@ -879,9 +829,9 @@ function buzz(type) {
   try {
     const ctx = getAudioCtx();
     const patterns = {
-      pre:   [[440,.15],[523,.15],[659,.3]],
-      alert: [[880,.1],[880,.1],[880,.1],[440,.3],[880,.5]],
-      safe:  [[523,.2],[659,.2],[784,.4]],
+      pre:  [[440,.15],[523,.15],[659,.3]],
+      alert:[[880,.1],[880,.1],[880,.1],[440,.3],[880,.5]],
+      safe: [[523,.2],[659,.2],[784,.4]],
     };
     let t = ctx.currentTime;
     for (const [freq,dur] of (patterns[type]||[])) {
@@ -894,9 +844,10 @@ function buzz(type) {
   } catch(e) {}
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // NOTIFICATIONS
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+
 function checkNotifPermission() {
   if ('Notification' in window && Notification.permission === 'default')
     document.getElementById('notif-bar').classList.add('show');
@@ -908,12 +859,13 @@ function requestNotif() {
 }
 function notify(title, body) {
   if ('Notification' in window && Notification.permission === 'granted')
-    new Notification(title, { body, icon:'https://gregysite.github.io/AlertMiklat/favicon.svg', requireInteraction:true });
+    new Notification(title, { body, requireInteraction:true });
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // PARAMÈTRES
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+
 function toggleSettings() {
   document.getElementById('settings-body').classList.toggle('open');
   document.getElementById('chevron').classList.toggle('open');
@@ -935,9 +887,9 @@ function toggleOption(key) {
   document.getElementById('toggle-'+key).classList.toggle('on', CONFIG[key]);
 }
 
-// ─── AUTOCOMPLETE VILLE ───────────────────────────────────────────────────────
+// ─── AUTOCOMPLETE VILLE ───────────────────────────────────────────
 function filterCities(val) {
-  const q = val.trim().toLowerCase();
+  const q  = val.trim().toLowerCase();
   const dd = document.getElementById('city-dropdown');
   if (!q) { dd.style.display='none'; return; }
   const matches = CITIES.filter(c =>
@@ -945,12 +897,13 @@ function filterCities(val) {
     c.en.toLowerCase().includes(q) || c.keys.toLowerCase().includes(q)
   );
   if (!matches.length) { dd.style.display='none'; return; }
-  dd.innerHTML = matches.map(c => `
-    <div class="city-option" onmousedown="selectCity(event)"
-      data-keys="${c.keys}" data-fr="${c.fr}" data-he="${c.he}" data-en="${c.en}">
-      <span style="font-weight:600;">${c[currentLang]||c.fr}</span>
-      <span style="font-size:11px;color:var(--muted);direction:rtl;">${c.he}</span>
-    </div>`).join('');
+  dd.innerHTML = matches.map(c =>
+    '<div class="city-option" onmousedown="selectCity(event)"'
+    + ' data-keys="' + c.keys + '" data-fr="' + c.fr + '" data-he="' + c.he + '" data-en="' + c.en + '">'
+    + '<span style="font-weight:600;">' + (c[currentLang]||c.fr) + '</span>'
+    + '<span style="font-size:11px;color:var(--muted);direction:rtl;">' + c.he + '</span>'
+    + '</div>'
+  ).join('');
   dd.style.display = 'block';
 }
 function selectCity(e) {
@@ -961,24 +914,25 @@ function selectCity(e) {
   T.fr.location = opt.dataset.fr; T.he.location = opt.dataset.he; T.en.location = opt.dataset.en;
   document.getElementById('t-location').textContent = opt.dataset[currentLang] || opt.dataset.fr;
   document.getElementById('zone-search').value = opt.dataset[currentLang] || opt.dataset.fr;
-  document.getElementById('zone-current-display').textContent = CONFIG.zones !== '__ALL__' ? '📍 ' + CONFIG.zones : '📍 כל הערים / Toutes';
+  document.getElementById('zone-current-display').textContent =
+    CONFIG.zones !== '__ALL__' ? '📍 ' + CONFIG.zones : '📍 כל הערים / Toutes';
   document.getElementById('city-dropdown').style.display = 'none';
-  // Re-fetch immédiatement avec la nouvelle zone
   fetchAndSync();
 }
 function showCityDropdown() { filterCities(document.getElementById('zone-search').value); }
 function hideCityDropdown() { setTimeout(() => { document.getElementById('city-dropdown').style.display='none'; }, 200); }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // TESTS
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+
 function toggleTests() {
-  const row = document.getElementById('test-row');
+  const row     = document.getElementById('test-row');
   const visible = row.style.display !== 'none';
   row.style.display = visible ? 'none' : 'flex';
-  document.getElementById('t-test-btn').textContent = visible ? T[currentLang].testBtn : T[currentLang].testHide;
+  document.getElementById('t-test-btn').textContent =
+    visible ? T[currentLang].testBtn : T[currentLang].testHide;
   if (visible) {
-    // Fermeture → arrêt du test, retour au calme
     isTestMode = false;
     clearInterval(timerInterval);
     applyState('idle', null, null);
@@ -990,45 +944,42 @@ function toggleTests() {
 function simulatePhase(phase) {
   if (!isTestMode) return;
   clearInterval(timerInterval);
+  const now = Math.floor(Date.now()/1000);
   if (phase === 'pre-alert') {
-    currentState = 'idle'; // force pour permettre la transition
-    applyState('pre-alert', null, null);
-    showLastAlert('TEST — ירושלים - דרום', null);
+    currentState = 'idle';
+    applyState('pre-alert', null, now);
   } else if (phase === 'alert') {
     currentState = 'idle';
-    showLastAlert('TEST — ירושלים - דרום', Math.floor(Date.now()/1000));
+    showLastAlert('TEST — ירושלים - דרום', now);
     buzz('alert');
     notify(...T[currentLang].notifAlert);
-    applyState('alert', { remaining: CONFIG.durationSec }, Math.floor(Date.now()/1000));
+    applyState('alert', { remaining:CONFIG.durationSec, city:'TEST', alertTime:now }, now);
   } else if (phase === 'safe') {
-    currentState = 'alert'; // force pour permettre la transition
-    applyState('safe', null, null);
+    currentState = 'alert';
+    applyState('safe', null, now);
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+
 window.addEventListener('load', () => {
-  // Init UI
   document.getElementById('duration-val').textContent = CONFIG.durationSec / 60;
   document.getElementById('poll-val').textContent     = CONFIG.pollIntervalSec + 's';
   document.getElementById('toggle-vibration').classList.toggle('on', CONFIG.vibration);
   document.getElementById('toggle-sound').classList.toggle('on', CONFIG.sound);
 
-  // Init ville
   const cityMatch = CITIES.find(c => c.keys === CONFIG.zones);
   if (cityMatch) {
     document.getElementById('zone-search').value = cityMatch[currentLang] || cityMatch.fr;
-    document.getElementById('zone-current-display').textContent = CONFIG.zones !== '__ALL__' ? '📍 ' + CONFIG.zones : '📍 כל הערים / Toutes';
+    document.getElementById('zone-current-display').textContent =
+      CONFIG.zones !== '__ALL__' ? '📍 ' + CONFIG.zones : '📍 כל הערים / Toutes';
   }
 
-  // Init langue
   setLang(currentLang);
   setFavicon('idle');
   checkNotifPermission();
-
-  // Premier fetch immédiat au chargement → reconstruit l'état
   startPolling();
 });
 </script>
