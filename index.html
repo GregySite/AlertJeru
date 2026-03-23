@@ -395,8 +395,36 @@ const CITIES = [
   { fr:'Sdérot',               he:'שדרות',         en:'Sderot',          keys:'שדרות' },
   { fr:'Gush Etzion',          he:'גוש עציון',     en:'Gush Etzion',     keys:'גוש עציון' },
   { fr:'Gaza (env.)',          he:'עוטף עזה',      en:'Gaza Envelope',   keys:'עוטף עזה' },
-  { fr:'Metulla',              he:'מטולה',         en:'Metulla',         keys:'מטולה' },
-  { fr:'Nord (général)',       he:'הצפון',         en:'The North',       keys:'מטולה,קריית שמונה,נהריה' },
+  { fr:'Metulla',              he:'מטולה',           en:'Metulla',           keys:'מטולה' },
+  { fr:'Nord (général)',       he:'הצפון',           en:'The North',         keys:'מטולה,קריית שמונה,נהריה' },
+  { fr:'Bat Yam',              he:'בת ים',            en:'Bat Yam',           keys:'בת ים' },
+  { fr:'Holon',                he:'חולון',            en:'Holon',             keys:'חולון' },
+  { fr:'Rishon LeZion',        he:'ראשון לציון',      en:'Rishon LeZion',     keys:'ראשון לציון' },
+  { fr:'Rehovot',              he:'רחובות',           en:'Rehovot',           keys:'רחובות' },
+  { fr:'Lod',                  he:'לוד',              en:'Lod',               keys:'לוד' },
+  { fr:'Ramla',                he:'רמלה',             en:'Ramla',             keys:'רמלה' },
+  { fr:'Kfar Saba',            he:'כפר סבא',          en:'Kfar Saba',         keys:'כפר סבא' },
+  { fr:'Raanana',              he:'רעננה',            en:"Ra'anana",          keys:'רעננה' },
+  { fr:'Petah Tikva',          he:'פתח תקווה',        en:'Petah Tikva',       keys:'פתח תקווה' },
+  { fr:'Bnei Brak',            he:'בני ברק',          en:'Bnei Brak',         keys:'בני ברק' },
+  { fr:'Ramat Gan',            he:'רמת גן',           en:'Ramat Gan',         keys:'רמת גן' },
+  { fr:'Givatayim',            he:'גבעתיים',          en:'Givatayim',         keys:'גבעתיים' },
+  { fr:'Gush Dan',             he:'גוש דן',           en:'Gush Dan',          keys:'גוש דן,תל אביב,בני ברק,רמת גן' },
+  { fr:'Tibériade',            he:'טבריה',            en:'Tiberias',          keys:'טבריה' },
+  { fr:'Nazareth',             he:'נצרת',             en:'Nazareth',          keys:'נצרת' },
+  { fr:'Acre (Akko)',          he:'עכו',              en:'Akko',              keys:'עכו' },
+  { fr:'Beit Shemesh',         he:'בית שמש',          en:'Beit Shemesh',      keys:'בית שמש' },
+  { fr:'Dimona',               he:'דימונה',           en:'Dimona',            keys:'דימונה' },
+  { fr:'Arad',                 he:'ערד',              en:'Arad',              keys:'ערד' },
+  { fr:'Ofakim',               he:'אופקים',           en:'Ofakim',            keys:'אופקים' },
+  { fr:'Netivot',              he:'נתיבות',           en:'Netivot',           keys:'נתיבות' },
+  { fr:'Qiryat Gat',          he:'קריית גת',         en:'Kiryat Gat',        keys:'קריית גת' },
+  { fr:'Hadera',               he:'חדרה',             en:'Hadera',            keys:'חדרה' },
+  { fr:'Afula',                he:'עפולה',            en:'Afula',             keys:'עפולה' },
+  { fr:'Tiberias',             he:'טבריה',            en:'Tiberias',          keys:'טבריה' },
+  { fr:'Zefat (Safed)',        he:'צפת',              en:'Safed',             keys:'צפת' },
+  { fr:'Rishon Nord',          he:'ראשון לציון - מזרח', en:'Rishon East',    keys:'ראשון לציון - מזרח' },
+  { fr:'Jérusalem - דרום',    he:'ירושלים - דרום',   en:'Jerusalem South area', keys:'ירושלים - דרום' },
 ];
 
 const CONFIG = {
@@ -505,24 +533,83 @@ function renderHistory(history, zones, nowSec) {
   const card = document.getElementById('history-card');
   const list = document.getElementById('history-list');
   const t    = T[currentLang];
-  const relevant = history
-    .filter(h => !CAT_DRILL.includes(h.cat) && zoneMatches(h.cities, zones))
-    .sort((a,b) => b.time - a.time).slice(0, 3);
+
+  // Grouper par groupId (même vague d'alerte)
+  // Une vague = le groupId le plus récent qui contient notre zone
+  const allZones = zones === '__ALL__';
+
+  // Collecter les groupIds qui contiennent notre zone
+  const matchedGroupIds = new Set();
+  for (const h of history) {
+    if (!CAT_DRILL.includes(h.cat) && zoneMatches(h.cities, zones)) {
+      if (h.groupId) matchedGroupIds.add(h.groupId);
+    }
+  }
+
+  // Si pas de groupId (oref), on filtre directement par ville
+  // Prendre les 3 événements les plus récents (par groupId ou par entrée)
+  let relevant = [];
+
+  if (allZones) {
+    // Toutes les villes → dédupliquer par groupId, garder le plus récent de chaque groupe
+    const seen = new Set();
+    for (const h of history) {
+      if (CAT_DRILL.includes(h.cat)) continue;
+      const key = h.groupId || h.time;
+      if (!seen.has(key)) { seen.add(key); relevant.push(h); }
+      if (relevant.length >= 3) break;
+    }
+  } else {
+    // Zone spécifique → inclure toutes les entrées des groupes qui touchent notre zone
+    // Dédupliquer par groupId, garder l'entrée la plus récente de chaque groupe
+    const seen = new Set();
+    for (const h of history) {
+      if (CAT_DRILL.includes(h.cat)) continue;
+      const key = h.groupId || h.time;
+      // Inclure si: la ville matche OU si le groupId contient notre zone
+      if (zoneMatches(h.cities, zones) || matchedGroupIds.has(h.groupId)) {
+        if (!seen.has(key)) {
+          seen.add(key);
+          // Pour l'affichage: trouver la ville de notre zone dans ce groupe
+          const matchedEntry = history.find(x => x.groupId === h.groupId && zoneMatches(x.cities, zones));
+          relevant.push(matchedEntry || h);
+        }
+      }
+      if (relevant.length >= 3) break;
+    }
+  }
+
   document.getElementById('t-history-title').textContent = t.historyTitle;
   if (relevant.length === 0) { card.style.display = 'none'; return; }
   card.style.display = 'block';
+
   list.innerHTML = relevant.map(item => {
     const cat      = item.cat || 1;
     const label    = t.catLabel[cat]   || t.catLabel.default;
     const badgeCls = t.badgeClass[cat] || t.badgeClass.default;
-    const city     = getMatchedCity(item.cities, zones);
+    // Traduire le nom de la ville hébreu → langue courante
+    const heCity   = allZones ? (item.cities[0] || '?') : getMatchedCity(item.cities, zones);
+    const cityName = translateCity(heCity);
     const minAgo   = Math.round((nowSec - item.time) / 60);
     return '<div class="history-item">'
       + '<span class="history-badge ' + badgeCls + '">' + label + '</span>'
-      + '<span class="history-city">' + city + '</span>'
+      + '<span class="history-city">' + cityName + '</span>'
       + '<span class="history-ago">' + t.agoFn(minAgo) + '</span>'
       + '</div>';
   }).join('');
+}
+
+// Traduit un nom de ville hébreu vers la langue courante via CITIES
+function translateCity(heCity) {
+  if (!heCity || heCity === '?') return '?';
+  // Cherche dans CITIES une entrée dont les keys contiennent ce nom
+  const found = CITIES.find(c =>
+    c.he === heCity ||
+    c.keys.split(',').some(k => k.trim() === heCity)
+  );
+  if (found) return found[currentLang] || found.fr;
+  // Pas trouvé → retourne tel quel (hébreu)
+  return heCity;
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────
