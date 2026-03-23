@@ -771,20 +771,27 @@ function setLang(lang) {
     if (el && val) el.textContent = val;
   }
 
-  const isTestVisible = document.getElementById('test-row').style.display !== 'none';
-  document.getElementById('t-test-btn').textContent = isTestVisible ? t.testHide : t.testBtn;
+  // Statut réseau immédiat
+  const dot2 = document.getElementById('status-dot');
+  const txt2 = document.getElementById('header-status-txt');
+  if (txt2) txt2.textContent = dot2.classList.contains('offline') ? t.offline : t.online;
 
-  const cityMatch = CITIES.find(c => c.keys === CONFIG.zones);
-  document.getElementById('t-location').textContent =
-    cityMatch ? (cityMatch[lang] || cityMatch.fr) : t.location;
-  const searchEl = document.getElementById('zone-search');
-  if (searchEl && cityMatch) searchEl.value = cityMatch[lang] || cityMatch.fr;
+  // Bouton tests
+  const isTV = document.getElementById('test-row').style.display !== 'none';
+  document.getElementById('t-test-btn').textContent = isTV ? t.testHide : t.testBtn;
 
-  const p = T[lang].phases[currentState] || T[lang].phases.idle;
-  document.getElementById('phase-title').textContent = p.title;
-  document.getElementById('phase-icon').textContent  = p.icon;
-  const msgEl = document.getElementById('phase-msg');
-  if (msgEl) { msgEl.textContent = p.msg; msgEl.setAttribute('dir', t.dir); }
+  // Ville
+  const cM = CITIES.find(c => c.keys === CONFIG.zones);
+  document.getElementById('t-location').textContent = cM ? (cM[lang] || cM.fr) : t.location;
+  const sEl = document.getElementById('zone-search');
+  if (sEl && cM) sEl.value = cM[lang] || cM.fr;
+
+  // Phase texte
+  const pP = T[lang].phases[currentState] || T[lang].phases.idle;
+  document.getElementById('phase-title').textContent = pP.title;
+  document.getElementById('phase-icon').textContent  = pP.icon;
+  const mEl = document.getElementById('phase-msg');
+  if (mEl) { mEl.textContent = pP.msg; mEl.setAttribute('dir', t.dir); }
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -970,7 +977,7 @@ window.addEventListener('load', () => {
   document.getElementById('toggle-vibration').classList.toggle('on', CONFIG.vibration);
   document.getElementById('toggle-sound').classList.toggle('on', CONFIG.sound);
 
-  const cityMatch = CITIES.find(c => c.keys === CONFIG.zones);
+
   if (cityMatch) {
     document.getElementById('zone-search').value = cityMatch[currentLang] || cityMatch.fr;
     document.getElementById('zone-current-display').textContent =
