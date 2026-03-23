@@ -279,7 +279,7 @@
 const PROXY_URL = 'https://miklat-alert.gregyman.workers.dev/';
 const CAT_PRE   = 14;
 const CAT_END   = 13;
-const CAT_DRILL = [101,102,103,104,107];
+const CAT_DRILL = [3,4,5,6,101,102,103,104,107]; // ignorer: séisme, tsunami, matières dangereuses, NBC, exercices
 
 const T = {
   fr: {
@@ -293,7 +293,7 @@ const T = {
     testBtn:'tests', testHide:'masquer tests',
     btnPre:'⚠️ Pré-alerte', btnAlert:'🚨 ALERTE', btnSafe:'✅ Sortie',
     lastAlert:'⚡ Dernière alerte', historyTitle:'📋 Historique',
-    catLabel:{ [CAT_PRE]:'Pré-alerte', [CAT_END]:'Sortie', default:'Alerte' },
+    catLabel:{ [CAT_PRE]:'Pré-alerte', [CAT_END]:'Sortie', 1:'Roquette', 2:'Drone/UAV', default:'Alerte' },
     badgeClass:{ [CAT_PRE]:'pre', [CAT_END]:'safe', default:'alert' },
     agoFn:(m) => m <= 0 ? "à l'instant" : 'il y a ' + m + ' min',
     online:'en ligne', offline:'erreur réseau',
@@ -322,7 +322,7 @@ const T = {
     testBtn:'בדיקות', testHide:'הסתר בדיקות',
     btnPre:'⚠️ טרום-אזעקה', btnAlert:'🚨 אזעקה', btnSafe:'✅ יציאה',
     lastAlert:'⚡ אזעקה אחרונה', historyTitle:'📋 היסטוריה',
-    catLabel:{ [CAT_PRE]:'טרום-אזעקה', [CAT_END]:'יציאה', default:'אזעקה' },
+    catLabel:{ [CAT_PRE]:'טרום-אזעקה', [CAT_END]:'יציאה', 1:'רקטה', 2:'כטב"מ', default:'אזעקה' },
     badgeClass:{ [CAT_PRE]:'pre', [CAT_END]:'safe', default:'alert' },
     agoFn:(m) => m <= 0 ? 'עכשיו' : 'לפני ' + m + " דק'",
     online:'מחובר', offline:'שגיאת רשת',
@@ -351,7 +351,7 @@ const T = {
     testBtn:'tests', testHide:'hide tests',
     btnPre:'⚠️ Pre-alert', btnAlert:'🚨 ALERT', btnSafe:'✅ All clear',
     lastAlert:'⚡ Last alert', historyTitle:'📋 History',
-    catLabel:{ [CAT_PRE]:'Pre-alert', [CAT_END]:'All clear', default:'Alert' },
+    catLabel:{ [CAT_PRE]:'Pre-alert', [CAT_END]:'All clear', 1:'Rocket', 2:'Drone/UAV', default:'Alert' },
     badgeClass:{ [CAT_PRE]:'pre', [CAT_END]:'safe', default:'alert' },
     agoFn:(m) => m <= 0 ? 'just now' : m + ' min ago',
     online:'online', offline:'network error',
